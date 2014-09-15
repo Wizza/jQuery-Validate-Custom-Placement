@@ -64,12 +64,12 @@ $(document).ready(function(){
 	}
 	
 	// Override internal function with added _adjustLabel function
-	// Functions are copied from validation source but have _adjustLabel function call added within
+	// Functions are copied from jQuery Validate source but have _adjustLabel function call added within
 	function _onfocusout(element){
 		if ( !this.checkable( element ) && ( element.name in this.submitted || !this.optional( element ) ) ) {
 			this.element( element );
 			
-			// Custom Function
+			// Call adjust label function
 			_adjustLabel( element );
 		}
 	}
@@ -80,7 +80,7 @@ $(document).ready(function(){
 		} else if ( element.name in this.submitted || element === this.lastElement ) {
 			this.element( element );
 			
-			// Custom Function
+			// Call adjust label function
 			_adjustLabel( element );
 		}
 	}
