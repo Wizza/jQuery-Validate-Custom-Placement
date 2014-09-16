@@ -63,7 +63,7 @@ $(document).ready(function(){
 	
 	// Overriding the internal function from jQuery Validate defaultShowErrors
 	// This is due to that the labels inner html is updated and we are using the
-	// highlight setting to recalculate the width and previous "this.showLabel" was being called after
+	// highlight setting to recalculate the width and previously "this.showLabel" was being called after
 	// this.settings.highlight.call was being called and the new text hadn't yet been updated for the new width to be calculated.
 	function _overrideShowErrors(){
 		var i, elements, error;
