@@ -5,7 +5,7 @@
 	border-radius: 2px;
 }
 .validation-error:after{ content: ""; width: 0; height: 0; position: absolute; }
-.validation-error.down:after{ bottom: -6px; left: 10px; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 6px solid #ed1b2e; }
+.validation-error.down:after{ bottom: -6px; left: 10px; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 7px solid #ed1b2e; }
 .validation-error.left:after{ top: 50%; margin-top: -6px; left: -6px; border-top: 6px solid transparent; border-bottom: 6px solid transparent; border-right: 6px solid #ed1b2e; }
 .validation-wrap{ position: relative; display: inline-block; }
 

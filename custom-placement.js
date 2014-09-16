@@ -1,10 +1,10 @@
 $(document).ready(function(){
 	
-	// Setups
+	// Setup Defaults
 	$.validator.setDefaults({
 		errorPlacement: _errorPlacement,
-		onfocusout: _onfocusout,
-		onkeyup: _onkeyup
+		highlight: _adjustLabel,
+		showErrors: _overrideShowErrors
 	});
 	
 	// Error placement Calculation methods
@@ -32,9 +32,7 @@ $(document).ready(function(){
 		eleClone.attr('style', '');
 		eleClone.css('visibility', 'hidden').appendTo('body');
 		
-		// Can't use jQuery outerWidth() here as it rounds down the decimal point width and the text in the label can wrap
-		// Always round up just to make sure there is enough room for the text not to wrap
-		var eleWidth = Math.ceil(eleClone[0].getBoundingClientRect().width);
+		var eleWidth = eleClone.outerWidth() + 1;
 		eleClone.remove();
 		
 		return eleWidth;
@@ -63,26 +61,37 @@ $(document).ready(function(){
 		}
 	}
 	
-	// Override internal function with added _adjustLabel function
-	// Functions are copied from jQuery Validate source but have _adjustLabel function call added within
-	function _onfocusout(element){
-		if ( !this.checkable( element ) && ( element.name in this.submitted || !this.optional( element ) ) ) {
-			this.element( element );
+	// Overriding the internal function from jQuery Validate defaultShowErrors
+	// This is due to that the labels inner html is updated and we are using the
+	// highlight setting to recalculate the width and previous "this.showLabel" was being called after
+	// this.settings.highlight.call was being called and the new text hadn't yet been updated for the new width to be calculated.
+	function _overrideShowErrors(){
+		var i, elements, error;
+		for ( i = 0; this.errorList[ i ]; i++ ) {
+			error = this.errorList[ i ];
 			
-			// Call adjust label function
-			_adjustLabel( element );
-		}
-	}
-	
-	function _onkeyup( element, event ) {
-		if ( event.which === 9 && this.elementValue( element ) === "" ) {
-			return;
-		} else if ( element.name in this.submitted || element === this.lastElement ) {
-			this.element( element );
+			this.showLabel( error.element, error.message );
 			
-			// Call adjust label function
-			_adjustLabel( element );
+			if ( this.settings.highlight ) {
+				this.settings.highlight.call( this, error.element, this.settings.errorClass, this.settings.validClass );
+			}
 		}
+		if ( this.errorList.length ) {
+			this.toShow = this.toShow.add( this.containers );
+		}
+		if ( this.settings.success ) {
+			for ( i = 0; this.successList[ i ]; i++ ) {
+				this.showLabel( this.successList[ i ] );
+			}
+		}
+		if ( this.settings.unhighlight ) {
+			for ( i = 0, elements = this.validElements(); elements[ i ]; i++ ) {
+				this.settings.unhighlight.call( this, elements[ i ], this.settings.errorClass, this.settings.validClass );
+			}
+		}
+		this.toHide = this.toHide.not( this.toShow );
+		this.hideErrors();
+		this.addWrapper( this.toShow ).show();
 	}
 	
 });
